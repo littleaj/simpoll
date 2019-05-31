@@ -8,3 +8,7 @@
  */
 
 rootProject.name = 'simpoll'
+
+include 'model'
+include 'api'
+include 'web'
