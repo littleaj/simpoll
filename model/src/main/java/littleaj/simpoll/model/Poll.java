@@ -1,12 +1,8 @@
 package littleaj.simpoll.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class Poll {
 
@@ -15,7 +11,7 @@ public class Poll {
     private List<String> answers;
 
 
-    private Poll() {
+    public Poll() {
         answers = new ArrayList<>();
     }
 
@@ -23,7 +19,7 @@ public class Poll {
         return this.id;
     }
 
-    private void setId(PollId id) {
+    public void setId(PollId id) {
         this.id = id;
     }
 
@@ -31,15 +27,15 @@ public class Poll {
         return this.question;
     }
 
-    private void setQuestion(String question) {
+    public void setQuestion(String question) {
         this.question = question;
     }
 
-    private void addAnswer(String answer) {
+    public void addAnswer(String answer) {
         this.answers.add(answer);
     }
 
-    private String removeAnswer(int index) {
+    public String removeAnswer(int index) {
         return this.answers.remove(index);
     }
 
@@ -61,50 +57,6 @@ public class Poll {
     @Override
     public int hashCode() {
         return Objects.hash(id, question, answers);
-    }
-
-    public static class Builder {
-        private Poll product;
-        private Set<ValidationRule> validationRules;
-
-        private Builder() {
-            product = new Poll();
-            validationRules = new HashSet<>();
-        }
-
-        public Builder question(String question) {
-            // TODO validate input
-            product.setQuestion(question);
-            return this;
-        }
-
-        public Builder id(PollId id) {
-            product.setId(id);
-            return this;
-        }
-
-        public Builder answer(String answer) {
-            product.addAnswer(answer);
-            return this;
-        }
-    }
-
-    private static interface ValidationRule {
-        boolean validate(Poll poll);
-        String getFailureReason();
-    }
-
-    private static class QuestionIsSet implements ValidationRule {
-        
-        @Override
-        public String getFailureReason() {
-            return "question cannot be null/empty/blank";
-        }
-
-        @Override
-        public boolean validate(Poll poll) {
-            return StringUtils.isNotBlank(poll.getQuestion());
-        }
     }
 
 }
