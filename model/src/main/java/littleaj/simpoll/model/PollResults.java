@@ -13,8 +13,8 @@ public class PollResults {
     }
 
     public PollResults(PollId pollId, int resultsId) {
-        this.setPollId(pollId);
-        this.setResultsId(resultsId);
+        setPollId(pollId);
+        setResultsId(resultsId);
         setResults(new HashSet<>());
     }
 
@@ -36,10 +36,14 @@ public class PollResults {
 
 
     public Set<Result> getResults() {
-        return results;
+        return new HashSet<>(results);
     }
 
     public void setResults(Set<Result> results) {
         this.results = results;
+    }
+
+    public void addResult(Result result) {
+        this.results.add(result);
     }
 }
