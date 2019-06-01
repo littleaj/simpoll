@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import littleaj.simpoll.api.config.SimpollConfigurationProperties.PollIdServiceConfiguration;
 import littleaj.simpoll.api.repositories.PollRepository;
 import littleaj.simpoll.model.PollId;
 
@@ -13,10 +14,11 @@ public class PollIdService {
     @Autowired
     private PollRepository pollRepository;
 
-    private final int maxLength;
+    private final PollIdServiceConfiguration config;
 
-    public PollIdService(int maxLength) {
-        this.maxLength = maxLength;
+    @Autowired
+    public PollIdService(PollIdServiceConfiguration config) {
+        this.config = config;
     }
 
     public PollId generateNextId(String question) {

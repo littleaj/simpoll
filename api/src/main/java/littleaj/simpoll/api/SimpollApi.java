@@ -2,17 +2,15 @@ package littleaj.simpoll.api;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import littleaj.simpoll.api.repositories.PollRepository;
-import littleaj.simpoll.api.repositories.PollResultsRepository;
-import littleaj.simpoll.api.repositories.PollStatusRepository;
+import littleaj.simpoll.api.config.SimpollConfigurationProperties;
 import littleaj.simpoll.api.repositories.inmem.InMemoryPollRepository;
-import littleaj.simpoll.api.services.PollService;
 
 @SpringBootApplication
 public class SimpollApi {
@@ -27,6 +25,9 @@ public class SimpollApi {
         SpringApplication.run(SimpollApi.class, args);
     }
 
+    @Autowired
+    SimpollConfigurationProperties config;
+
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
@@ -37,26 +38,15 @@ public class SimpollApi {
             for (String beanName : beanNames) {
                 System.out.println(beanName);
             }
+
+            System.out.println("----------");
+            System.out.println("version = "+config.getVersion());
         };
     }
 
     @Bean
-    public PollRepository pollRepository(ApplicationContext ctx) {
+    public InMemoryPollRepository pollRepository(ApplicationContext ctx) {
         return repository;
     }
 
-    @Bean
-    public PollResultsRepository pollResultsRepository(ApplicationContext ctx) {
-        return repository;
-    }
-
-    @Bean
-    public PollStatusRepository pollStatusRepository(ApplicationContext ctx) {
-        return repository;
-    }
-
-    @Bean
-    public PollService pollService(ApplicationContext ctx) {
-        return new PollService();
-    }
 }
