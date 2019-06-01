@@ -7,15 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import littleaj.simpoll.api.repositories.PollRepository;
+import littleaj.simpoll.api.repositories.PollResultsRepository;
+import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.model.Poll;
 
 @Service
 public class PollService {
 
     @Autowired
-    private PollRepository repository;
+    private PollRepository pollRepository;
 
-    public List<Poll> readAll() {
-        return repository.listAllPolls().stream().collect(Collectors.toList());
+    @Autowired
+    private PollStatusRepository pollStatusRepository;
+
+    @Autowired
+    private PollResultsRepository resultsRepository;
+
+    public List<Poll> readAllPolls() {
+        return pollRepository.getAllPolls().stream().collect(Collectors.toList());
     }
 }

@@ -19,6 +19,6 @@ public class PollController {
 
     @GetMapping("/")
     public List<Poll> index() {
-        return service.readAll();
+        return service.readAllPolls();
     }
 }
