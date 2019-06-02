@@ -25,8 +25,9 @@ targetCompatibility = 1.8
 
 dependencies {
     implementation project(':model')
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.1.5.RELEASE'
     implementation 'org.apache.commons:commons-lang3:3.9'
 
     testImplementation 'junit:junit'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.1.5.RELEASE'
 }
