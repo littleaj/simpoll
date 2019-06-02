@@ -25,14 +25,30 @@ public class PollIdService {
         // 1. hyphenate
         StringBuilder sb = new StringBuilder();
         String trimmed = StringUtils.strip(question);
-        for (int i = 0; i < question.length(); i++) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < trimmed.length(); i++) {
             // only alphanumeric characters '-' and '_' are allowed, whitespace replaced with hyphen, all others removed
-
+            if (result.length() > config.getMaxLength()) {
+                break;
+            }
+            String c = trimmed.substring(i, i+1);
+            assert c.length() == 1 : "not pulling one character";
+            
+            if (StringUtils.isWhitespace(c)) {
+                result.append('-');
+            }
+            if (StringUtils.isAlphanumeric(c)) {
+                result.append(c);
+            }
         }
         // 2. truncate
         // 3. verify available
         // 4. numerate
+        PollId candidateId = new PollId(result.toString());
+        while (pollRepository.hasPollId(candidateId)) {
+            // increment poll id suffix
+        }
 
-        return null;
+        return candidateId;
     }
 }
