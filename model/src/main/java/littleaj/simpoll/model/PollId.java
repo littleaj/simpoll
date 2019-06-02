@@ -10,6 +10,10 @@ public class PollId {
         this.id = id;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -24,6 +28,11 @@ public class PollId {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return getId();
     }
 
 }
