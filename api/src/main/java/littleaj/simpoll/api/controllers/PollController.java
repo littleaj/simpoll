@@ -22,7 +22,7 @@ public class PollController {
 
     @GetMapping
     public ResponseEntity<PollsList> index() {
-        return ResponseEntity.ok(new PollsList(polls.readAllPolls()));
+        return ResponseEntity.ok(new PollsList(polls.readAll()));
     }
 
     @PostMapping
