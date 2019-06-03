@@ -7,14 +7,22 @@ import java.util.Objects;
 public class Poll {
 
     private PollId id;
+    private String name;
     private String question;
     private List<String> answers;
-
 
     public Poll() {
         answers = new ArrayList<>();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public PollId getId() {
         return this.id;
     }
