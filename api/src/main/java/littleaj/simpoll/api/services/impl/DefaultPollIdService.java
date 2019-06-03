@@ -2,14 +2,15 @@ package littleaj.simpoll.api.services.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 
 import littleaj.simpoll.api.config.SimpollConfigurationProperties.PollIdServiceConfiguration;
 import littleaj.simpoll.api.repositories.PollRepository;
 import littleaj.simpoll.api.services.PollIdService;
+import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 
-@Primary
+@Service
 public class DefaultPollIdService implements PollIdService {
     
     @Autowired
@@ -25,9 +26,15 @@ public class DefaultPollIdService implements PollIdService {
     // }
 
     @Override
-    public PollId generateNextId(String question) {
+    public void applyId(Poll poll) {
+        PollId id = generateNextId(poll.getName());
+        poll.setId(id);
+    }
+
+    // TODO fix edge case: largest number in maxlen
+    public PollId generateNextId(String name) {
         // 1. hyphenate & truncate
-        String trimmed = StringUtils.strip(question);
+        String trimmed = StringUtils.strip(name);
         StringBuilder result = new StringBuilder();
         boolean skipHyphen = false;
         for (int i = 0; i < trimmed.length() && result.length() < config.getMaxLength(); i++) {

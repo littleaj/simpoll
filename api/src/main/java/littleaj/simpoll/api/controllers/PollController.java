@@ -12,29 +12,23 @@ import littleaj.simpoll.api.model.PollsList;
 import littleaj.simpoll.api.services.PollIdService;
 import littleaj.simpoll.api.services.PollService;
 import littleaj.simpoll.model.Poll;
-import littleaj.simpoll.model.PollId;
 
 @RestController
 @RequestMapping("/polls")
 public class PollController {
 
     @Autowired
-    private PollService service;
-
-    @Autowired
-    private PollIdService ids;
+    private PollService polls;
 
     @GetMapping
     public ResponseEntity<PollsList> index() {
-        return ResponseEntity.ok(new PollsList(service.readAllPolls()));
+        return ResponseEntity.ok(new PollsList(polls.readAllPolls()));
     }
 
-    // @PostMapping
-    // public ResponseEntity<Poll> create(@RequestBody Poll poll) {
-    //     // 1. generate id
-    //     PollId id = ids.generateNextId(poll.getQuestion());
-    //     // 2. store
-    //     return null;
-    // }
+    @PostMapping
+    public ResponseEntity<Poll> create(@RequestBody Poll poll) {
+        polls.create(poll);
+        return ResponseEntity.ok(poll);
+    }
 
 }
