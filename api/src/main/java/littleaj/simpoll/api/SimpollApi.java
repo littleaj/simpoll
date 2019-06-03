@@ -1,7 +1,5 @@
 package littleaj.simpoll.api;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -36,7 +34,7 @@ public class SimpollApi {
     }
 
     @Bean
-    public InMemoryPollRepository pollRepository(ApplicationContext ctx) {
+    public InMemoryPollRepository allInOnePollRepository(ApplicationContext ctx) {
         return repository;
     }
 
