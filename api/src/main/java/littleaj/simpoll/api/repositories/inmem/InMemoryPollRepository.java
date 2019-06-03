@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
 import littleaj.simpoll.api.repositories.PollRepository;
@@ -13,7 +14,6 @@ import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
 import littleaj.simpoll.model.PollStatus;
-import littleaj.simpoll.model.Result;
 
 public class InMemoryPollRepository implements PollRepository, PollResultsRepository, PollStatusRepository {
     private Map<PollId, Poll> pollsStore;
@@ -51,16 +51,22 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
         return statusStore.get(id);
     }
 
+    /**
+     * @throws PollNotFoundException
+     */
     @Override
-    public void updateStatus(PollId id, PollStatus status) throws PollNotFoundException {
+    public void updateStatus(PollId id, PollStatus status) {
         if (!pollsStore.containsKey(id)) {
             throw new PollNotFoundException();
         }
         statusStore.put(id, status);
     }
 
+    /**
+     * @throws PollNotFoundException
+     */
     @Override
-    public PollResults getPollResults(PollId id) throws PollNotFoundException {
+    public PollResults getPollResults(PollId id) {
         if (!pollsStore.containsKey(id)) {
             throw new PollNotFoundException();
         }
@@ -68,17 +74,29 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
     }
 
     @Override
-    public PollResults submitResult(PollId id, Result result) throws PollNotFoundException {
+    public void incrementResult(PollId pollId, UUID answerId) {
+        if (!pollsStore.containsKey(pollId)) {
+            throw new PollNotFoundException();
+        }
+        PollResults results = resultsStore.get(pollId);
+        if (results == null) {
+            results = new PollResults(pollId);
+            resultsStore.put(pollId, results);
+        }
+        
+    }
+
+    /**
+     * @throws PollNotFoundException
+     */
+    @Override
+    public void deletePoll(PollId id) {
         if (!pollsStore.containsKey(id)) {
             throw new PollNotFoundException();
         }
-        PollResults results = resultsStore.get(id);
-        if (results == null) {
-            results = new PollResults(id);
-            resultsStore.put(id, results);
-        }
-        results.addResult(result);
-        return results;
+        resultsStore.remove(id);
+        statusStore.remove(id);
+        pollsStore.remove(id);
     }
 
 }

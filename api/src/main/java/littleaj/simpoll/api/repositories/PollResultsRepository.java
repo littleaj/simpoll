@@ -1,14 +1,12 @@
 package littleaj.simpoll.api.repositories;
 
-import littleaj.simpoll.api.exceptions.PollNotFoundException;
+import java.util.UUID;
+
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
-import littleaj.simpoll.model.Result;
 
 public interface PollResultsRepository {
-    PollResults getPollResults(PollId id) throws PollNotFoundException;
+    PollResults getPollResults(PollId id);
     
-    PollResults submitResult(PollId id, Result result) throws PollNotFoundException;
-
-
+    void incrementResult(PollId pollId, UUID answerId);
 }

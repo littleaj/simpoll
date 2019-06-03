@@ -13,4 +13,6 @@ public interface PollRepository {
     void storePoll(Poll poll);
 
     Poll loadPoll(PollId id);
+
+    void deletePoll(PollId id);
 }
