@@ -1,14 +1,14 @@
 package littleaj.simpoll.model;
 
 public class Result {
-    private String answer;
+    private Answer answer;
     private int voteCount;
     
-    public String getAnswer() {
+    public Answer getAnswer() {
         return answer;
     }
     
-    public void setAnswer(String answer) {
+    public void setAnswer(Answer answer) {
         this.answer = answer;
     }
     public int getVoteCount() {

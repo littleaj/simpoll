@@ -9,7 +9,7 @@ public class Poll {
     private PollId id;
     private String name;
     private String question;
-    private List<String> answers;
+    private List<Answer> answers;
 
     public Poll() {
         answers = new ArrayList<>();
@@ -40,14 +40,14 @@ public class Poll {
     }
 
     public void addAnswer(String answer) {
-        this.answers.add(answer);
+        this.answers.add(new Answer(answer));
     }
 
-    public String removeAnswer(int index) {
+    public Answer removeAnswer(int index) {
         return this.answers.remove(index);
     }
 
-    public String getAnswer(int index) {
+    public Answer getAnswer(int index) {
         return this.answers.get(index);
     }
 
