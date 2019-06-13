@@ -1,21 +1,19 @@
 package littleaj.simpoll.api.services.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import littleaj.simpoll.api.exceptions.AnswerNotFoundException;
+import littleaj.simpoll.api.exceptions.PollNotFoundException;
 import littleaj.simpoll.api.repositories.PollRepository;
 import littleaj.simpoll.api.repositories.PollResultsRepository;
 import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.api.services.PollIdService;
 import littleaj.simpoll.api.services.PollService;
-import littleaj.simpoll.model.Poll;
-import littleaj.simpoll.model.PollId;
-import littleaj.simpoll.model.PollResults;
-import littleaj.simpoll.model.PollStatus;
-import littleaj.simpoll.model.Vote;
+import littleaj.simpoll.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DefaultPollService implements PollService {
@@ -34,7 +32,7 @@ public class DefaultPollService implements PollService {
 
     @Override
     public List<Poll> readAll() {
-        return pollRepository.getAllPolls().stream().collect(Collectors.toList());
+        return new ArrayList<>(pollRepository.getAllPolls());
     }
 
     @Override
@@ -48,44 +46,73 @@ public class DefaultPollService implements PollService {
         if (poll.getId() == null) {
             throw new IllegalArgumentException("must have pollId");
         }
-        // TODO exception if poll DNE
+        if (!pollRepository.hasPollId(poll.getId())) {
+            throw new PollNotFoundException();
+        }
         pollRepository.storePoll(poll);
     }
 
     @Override
     public Poll read(PollId id) {
+        if (!pollRepository.hasPollId(id)) {
+            throw new PollNotFoundException();
+        }
         return pollRepository.loadPoll(id);
     }
 
     @Override
     public void open(PollId id) {
+        if (!pollRepository.hasPollId(id)) {
+            throw new PollNotFoundException();
+        }
         pollStatusRepository.updateStatus(id, PollStatus.OPEN);
     }
 
     @Override
     public void close(PollId id) {
+        if (!pollRepository.hasPollId(id)) {
+            throw new PollNotFoundException();
+        }
         pollStatusRepository.updateStatus(id, PollStatus.CLOSED);
     }
 
     @Override
     public void delete(PollId id) {
+        if (!pollRepository.hasPollId(id)) {
+            throw new PollNotFoundException();
+        }
         pollRepository.deletePoll(id);
     }
 
     @Override
     public PollStatus status(PollId id) {
+        if (!pollRepository.hasPollId(id)) {
+            throw new PollNotFoundException();
+        }
         return pollStatusRepository.getStatus(id);
     }
 
     @Override
     public void submitVote(Vote vote) {
-        // TODO validate poll is open, if not: 400, msg: poll is not open
-        // TODO validate answer id exists, if not: 400, msg: answer not found
+        if (!hasAnswerId(vote.getPollId(), vote.getAnswerId())) {
+            throw new AnswerNotFoundException();
+        }
         resultsRepository.incrementResult(vote.getPollId(), vote.getAnswerId());
+    }
+
+    private boolean hasAnswerId(PollId pollId, UUID answerId) {
+        if (!pollRepository.hasPollId(pollId)) {
+            throw new PollNotFoundException();
+        }
+        Poll poll = pollRepository.loadPoll(pollId);
+        return poll.hasAnswerId(answerId);
     }
 
     @Override
     public PollResults pollResults(PollId id) {
-        return null;
+        if (!pollRepository.hasPollId(id)) {
+            throw new PollNotFoundException();
+        }
+        return resultsRepository.getPollResults(id);
     }
 }
