@@ -2,11 +2,7 @@ package littleaj.simpoll.api.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import littleaj.simpoll.api.model.PollsList;
 import littleaj.simpoll.api.services.PollIdService;
@@ -28,6 +24,12 @@ public class PollController {
     @PostMapping
     public ResponseEntity<Poll> create(@RequestBody Poll poll) {
         polls.create(poll);
+        return ResponseEntity.ok(poll);
+    }
+
+    @PutMapping
+    public ResponseEntity<Poll> update(@RequestBody Poll poll) {
+        polls.update(poll);
         return ResponseEntity.ok(poll);
     }
 
