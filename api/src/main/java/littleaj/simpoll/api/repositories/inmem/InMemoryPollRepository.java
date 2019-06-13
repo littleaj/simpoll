@@ -1,10 +1,8 @@
 package littleaj.simpoll.api.repositories.inmem;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
 import littleaj.simpoll.api.repositories.PollRepository;
@@ -13,17 +11,29 @@ import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
-import littleaj.simpoll.model.PollStatus;
+import littleaj.simpoll.model.Status;
 
 public class InMemoryPollRepository implements PollRepository, PollResultsRepository, PollStatusRepository {
     private Map<PollId, Poll> pollsStore;
     private Map<PollId, PollResults> resultsStore;
-    private Map<PollId, PollStatus> statusStore;
+    private Map<PollId, Status> statusStore;
 
     public InMemoryPollRepository() {
-        pollsStore = new HashMap<>();
-        resultsStore = new HashMap<>();
-        statusStore = new HashMap<>();
+        this(new HashMap<>(), new HashMap<>(), new HashMap<>());
+    }
+
+    public InMemoryPollRepository(Map<PollId, Poll> pollsStore, Map<PollId, PollResults> resultsStore, Map<PollId, Status> statusStore) {
+        this.pollsStore = pollsStore;
+        this.resultsStore = resultsStore;
+        this.statusStore = statusStore;
+    }
+
+    InMemoryPollRepository(Collection<Poll> polls, Collection<PollResults> results, Collection<Status> statuses) {
+        this(
+                polls.stream().collect(Collectors.toMap(Poll::getId, Function.identity())),
+                results.stream().collect(Collectors.toMap(PollResults::getPollId, Function.identity())),
+                null);
+//        statuses.stream().collect(Collectors.toMap())
     }
 
     @Override
@@ -47,7 +57,7 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
     }
 
     @Override
-    public PollStatus getStatus(PollId id) {
+    public Status getStatus(PollId id) {
         return statusStore.get(id);
     }
 
@@ -55,7 +65,7 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
      * @throws PollNotFoundException
      */
     @Override
-    public void updateStatus(PollId id, PollStatus status) {
+    public void updateStatus(PollId id, Status status) {
         if (!pollsStore.containsKey(id)) {
             throw new PollNotFoundException();
         }

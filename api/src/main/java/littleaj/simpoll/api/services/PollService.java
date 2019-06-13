@@ -5,7 +5,7 @@ import java.util.List;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
-import littleaj.simpoll.model.PollStatus;
+import littleaj.simpoll.model.Status;
 import littleaj.simpoll.model.Vote;
 
 public interface PollService {
@@ -16,19 +16,19 @@ public interface PollService {
 
     /**
      * Creates a new poll. poll.getId() should be null.
-     * @param poll
+     * @param poll the poll to create
      */
     void create(Poll poll);
 
     /**
      * Updates existing poll. poll.getId() should be set to the id of the poll to update.
-     * @param poll
+     * @param poll the poll to update
      */
     void update(Poll poll);
 
     /**
      * Retrieves the poll with the given id
-     * @param id
+     * @param id poll id
      * @return
      */
     Poll read(PollId id);
@@ -52,11 +52,11 @@ public interface PollService {
     void delete(PollId id);
 
     /**
-     * Returns the statsu of the poll.
+     * Returns the status of the poll.
      * @param id
      * @return
      */
-    PollStatus status(PollId id);
+    Status status(PollId id);
 
     /**
      * Submits a poll vote.

@@ -1,10 +1,10 @@
 package littleaj.simpoll.api.repositories;
 
 import littleaj.simpoll.model.PollId;
-import littleaj.simpoll.model.PollStatus;
+import littleaj.simpoll.model.Status;
 
 public interface PollStatusRepository {
-    PollStatus getStatus(PollId id);
+    Status getStatus(PollId id);
 
-    void updateStatus(PollId id, PollStatus status);
+    void updateStatus(PollId id, Status status);
 }

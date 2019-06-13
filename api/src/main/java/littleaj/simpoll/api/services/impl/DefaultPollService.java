@@ -65,7 +65,7 @@ public class DefaultPollService implements PollService {
         if (!pollRepository.hasPollId(id)) {
             throw new PollNotFoundException();
         }
-        pollStatusRepository.updateStatus(id, PollStatus.OPEN);
+        pollStatusRepository.updateStatus(id, Status.OPEN);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class DefaultPollService implements PollService {
         if (!pollRepository.hasPollId(id)) {
             throw new PollNotFoundException();
         }
-        pollStatusRepository.updateStatus(id, PollStatus.CLOSED);
+        pollStatusRepository.updateStatus(id, Status.CLOSED);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class DefaultPollService implements PollService {
     }
 
     @Override
-    public PollStatus status(PollId id) {
+    public Status status(PollId id) {
         if (!pollRepository.hasPollId(id)) {
             throw new PollNotFoundException();
         }

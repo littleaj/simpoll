@@ -1,7 +1,7 @@
 package littleaj.simpoll.model;
 
-public enum PollStatus {
+public enum Status {
     CREATED,
     OPEN,
-    CLOSED;
+    CLOSED
 }
