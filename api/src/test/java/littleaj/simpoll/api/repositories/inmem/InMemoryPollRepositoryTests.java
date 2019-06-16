@@ -31,6 +31,7 @@ public class InMemoryPollRepositoryTests {
         assertTrue(repo.hasPollId(poll.getId()));
         assertThat(repo.getAllPolls(), hasItem(poll));
         Poll poll2 = createTestPoll("456");
+        repo.storePoll(poll2);
         assertTrue(repo.hasPollId(poll.getId()));
         assertTrue(repo.hasPollId(poll2.getId()));
         assertThat(repo.getAllPolls(), hasItem(poll));
