@@ -9,8 +9,10 @@ import java.io.IOException;
 
 @WebServlet(name="index", urlPatterns = "/")
 public class IndexServlet extends HttpServlet {
+    private static final long serialVersionUID = 6076404907866357513L;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        throw new UnsupportedOperationException("not implemented");
+        getServletContext().getRequestDispatcher("/index.jsp").forward(req, resp);
     }
 }
