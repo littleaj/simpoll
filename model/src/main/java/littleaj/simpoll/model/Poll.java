@@ -8,9 +8,11 @@ public class Poll {
     private String name;
     private String question;
     private Map<UUID, Answer> answers;
+    private Status status;
 
     public Poll() {
         answers = new HashMap<>();
+        status = Status.CREATED;
     }
 
     public String getName() {
@@ -71,4 +73,11 @@ public class Poll {
         return Objects.hash(id, question, answers);
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
