@@ -1,21 +1,20 @@
 package littleaj.simpoll.model;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class Vote {
     private PollId pollId;
-    private UUID answerId;
+    private int answerId;
 
     public PollId getPollId() {
         return pollId;
     }
 
-    public UUID getAnswerId() {
+    public int getAnswerId() {
         return answerId;
     }
 
-    public void setAnswerId(UUID answerId) {
+    public void setAnswerId(int answerId) {
         this.answerId = answerId;
     }
 

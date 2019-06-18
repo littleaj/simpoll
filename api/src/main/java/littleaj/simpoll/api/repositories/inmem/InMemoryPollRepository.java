@@ -1,9 +1,5 @@
 package littleaj.simpoll.api.repositories.inmem;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
 import littleaj.simpoll.api.repositories.PollRepository;
 import littleaj.simpoll.api.repositories.PollResultsRepository;
@@ -12,6 +8,13 @@ import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
 import littleaj.simpoll.model.Status;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class InMemoryPollRepository implements PollRepository, PollResultsRepository, PollStatusRepository {
     private Map<PollId, Poll> pollsStore;
@@ -84,7 +87,7 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
     }
 
     @Override
-    public void incrementResult(PollId pollId, UUID answerId) {
+    public void incrementResult(PollId pollId, int answerId) {
         if (!pollsStore.containsKey(pollId)) {
             throw new PollNotFoundException();
         }
@@ -93,7 +96,7 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
             results = new PollResults(pollId);
             resultsStore.put(pollId, results);
         }
-        
+
     }
 
     /**

@@ -7,28 +7,36 @@ import littleaj.simpoll.api.repositories.PollResultsRepository;
 import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.api.services.PollIdService;
 import littleaj.simpoll.api.services.PollService;
-import littleaj.simpoll.model.*;
+import littleaj.simpoll.model.Poll;
+import littleaj.simpoll.model.PollId;
+import littleaj.simpoll.model.PollResults;
+import littleaj.simpoll.model.Status;
+import littleaj.simpoll.model.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class DefaultPollService implements PollService {
 
-    @Autowired
-    private PollRepository pollRepository;
+    private final PollRepository pollRepository;
+
+    private final PollStatusRepository pollStatusRepository;
+
+    private final PollResultsRepository resultsRepository;
+
+    private final PollIdService pollIds;
 
     @Autowired
-    private PollStatusRepository pollStatusRepository;
-
-    @Autowired
-    private PollResultsRepository resultsRepository;
-
-    @Autowired
-    private PollIdService pollIds;
+    public DefaultPollService(PollRepository pollRepository, PollStatusRepository pollStatusRepository,
+                              PollResultsRepository resultsRepository, PollIdService pollIds) {
+        this.pollRepository = pollRepository;
+        this.pollStatusRepository = pollStatusRepository;
+        this.resultsRepository = resultsRepository;
+        this.pollIds = pollIds;
+    }
 
     @Override
     public List<Poll> readAll() {
@@ -36,13 +44,14 @@ public class DefaultPollService implements PollService {
     }
 
     @Override
-    public void create(Poll poll) {
+    public Poll create(Poll poll) {
         pollIds.applyId(poll);
         pollRepository.storePoll(poll);
+        return poll;
     }
 
     @Override
-    public void update(Poll poll) {
+    public Poll update(Poll poll) {
         if (poll.getId() == null) {
             throw new IllegalArgumentException("must have pollId");
         }
@@ -50,6 +59,7 @@ public class DefaultPollService implements PollService {
             throw new PollNotFoundException();
         }
         pollRepository.storePoll(poll);
+        return poll;
     }
 
     @Override
@@ -100,7 +110,7 @@ public class DefaultPollService implements PollService {
         resultsRepository.incrementResult(vote.getPollId(), vote.getAnswerId());
     }
 
-    private boolean hasAnswerId(PollId pollId, UUID answerId) {
+    private boolean hasAnswerId(PollId pollId, int answerId) {
         if (!pollRepository.hasPollId(pollId)) {
             throw new PollNotFoundException();
         }

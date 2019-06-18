@@ -1,17 +1,20 @@
 package littleaj.simpoll.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 public class Poll {
 
     private PollId id;
     private String name;
     private String question;
-    private Map<UUID, Answer> answers;
+    private List<String> answers;
     private Status status;
 
     public Poll() {
-        answers = new HashMap<>();
+        answers = new ArrayList<>();
         status = Status.CREATED;
     }
 
@@ -39,22 +42,29 @@ public class Poll {
         this.question = question;
     }
 
+    public List<String> getAnswers() {
+        return new ArrayList<>(answers);
+    }
+
+    public void setAnswers(Collection<String> answers) {
+        this.answers.clear();
+        this.answers.addAll(answers);
+    }
+
+    public String removeAnswer(int index) {
+        return this.answers.remove(index);
+    }
+
     public void addAnswer(String answer) {
-        Answer a = new Answer(answer);
-        a.setId(UUID.randomUUID());
-        this.answers.put(a.getId(), a);
+        this.answers.add(answer);
     }
 
-    public Answer removeAnswer(UUID id) {
-        return this.answers.remove(id);
+    public String getAnswer(int index) {
+        return this.answers.get(index);
     }
 
-    public Answer getAnswer(UUID id) {
-        return this.answers.get(id);
-    }
-
-    public boolean hasAnswerId(UUID id) {
-        return this.answers.containsKey(id);
+    public boolean hasAnswerId(int index) {
+        return index >= 0 && index < this.answers.size();
     }
 
     @Override
