@@ -34,3 +34,6 @@ build
 .settings
 .classpath
 **/bin
+
+.idea
+*.iml
