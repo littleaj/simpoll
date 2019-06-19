@@ -1,12 +1,14 @@
-package littleaj.simpoll.api.model;
+package littleaj.simpoll.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import littleaj.simpoll.model.Poll;
-
 public class PollsList {
-    private List<Poll> polls = new ArrayList<>();
+    private List<Poll> polls;
+
+    public PollsList() {
+        this(new ArrayList<>());
+    }
 
     public PollsList(List<Poll> polls) {
         this.polls = polls;

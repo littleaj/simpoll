@@ -1,7 +1,7 @@
 package littleaj.simpoll.api.controllers;
 
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
-import littleaj.simpoll.api.model.PollsList;
+import littleaj.simpoll.model.PollsList;
 import littleaj.simpoll.api.services.PollService;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
