@@ -95,27 +95,19 @@ public class DefaultPollService implements PollService {
     }
 
     @Override
-    public Status status(PollId id) {
-        if (!pollRepository.hasPollId(id)) {
-            throw new PollNotFoundException();
-        }
-        return pollStatusRepository.getStatus(id);
-    }
-
-    @Override
     public void submitVote(Vote vote) {
-        if (!hasAnswerId(vote.getPollId(), vote.getAnswerId())) {
+        if (!hasAnswer(vote.getPollId(), vote.getAnswer())) {
             throw new AnswerNotFoundException();
         }
-        resultsRepository.incrementResult(vote.getPollId(), vote.getAnswerId());
+        resultsRepository.incrementResult(vote.getPollId(), vote.getAnswer());
     }
 
-    private boolean hasAnswerId(PollId pollId, int answerId) {
+    private boolean hasAnswer(PollId pollId, String answer) {
         if (!pollRepository.hasPollId(pollId)) {
             throw new PollNotFoundException();
         }
         Poll poll = pollRepository.loadPoll(pollId);
-        return poll.hasAnswerId(answerId);
+        return poll.hasAnswer(answer);
     }
 
     @Override

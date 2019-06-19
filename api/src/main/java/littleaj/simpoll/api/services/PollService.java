@@ -3,7 +3,6 @@ package littleaj.simpoll.api.services;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
-import littleaj.simpoll.model.Status;
 import littleaj.simpoll.model.Vote;
 
 import java.util.List;
@@ -50,13 +49,6 @@ public interface PollService {
      * @param id
      */
     void delete(PollId id);
-
-    /**
-     * Returns the status of the poll.
-     * @param id
-     * @return
-     */
-    Status status(PollId id);
 
     /**
      * Submits a poll vote.

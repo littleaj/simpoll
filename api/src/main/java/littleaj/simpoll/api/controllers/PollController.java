@@ -1,10 +1,12 @@
 package littleaj.simpoll.api.controllers;
 
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
-import littleaj.simpoll.model.PollsList;
 import littleaj.simpoll.api.services.PollService;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
+import littleaj.simpoll.model.PollResults;
+import littleaj.simpoll.model.PollsList;
+import littleaj.simpoll.model.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,11 +58,62 @@ public class PollController {
         }
     }
 
-    @GetMapping("/{id}")
+    @PutMapping("{id}")
+    public ResponseEntity<Poll> updateId(@PathVariable PollId id, @RequestBody Poll poll) {
+        return update(poll);
+    }
+
+    @GetMapping("{id}")
     public ResponseEntity<Poll> getPoll(@PathVariable PollId id) {
         try {
             Poll poll = polls.read(id);
             return ResponseEntity.ok(poll);
+        } catch (PollNotFoundException pnfe) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("{id}/open")
+    public ResponseEntity activatePoll(@PathVariable PollId id) {
+        try {
+            System.out.println("Opening poll: "+id);
+            polls.open(id);
+            Poll poll = polls.read(id);
+            System.out.println("poll status = "+poll.getStatus());
+            return ResponseEntity.ok().build();
+        } catch (PollNotFoundException pnfe) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("{id}/close")
+    public ResponseEntity closePoll(@PathVariable PollId id) {
+        try {
+            polls.close(id);
+            System.out.println("Closing poll: "+id);
+            return ResponseEntity.ok().build();
+        } catch (PollNotFoundException pnfe) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("{id}/vote")
+    public ResponseEntity<PollResults> voteOnPoll(@PathVariable PollId id, @RequestBody Vote vote) {
+        try {
+            polls.submitVote(vote);
+            PollResults results = polls.pollResults(vote.getPollId());
+            return ResponseEntity.ok(results);
+        } catch (PollNotFoundException pnfe) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("{id}/results")
+    public ResponseEntity<PollResults> pollResults(@PathVariable PollId id) {
+        try {
+            System.out.println("Getting results for "+id);
+            PollResults results = polls.pollResults(id);
+            return ResponseEntity.ok(results);
         } catch (PollNotFoundException pnfe) {
             return ResponseEntity.notFound().build();
         }

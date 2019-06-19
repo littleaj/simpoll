@@ -4,8 +4,9 @@ import java.util.Objects;
 
 public class PollId {
 
-    private final String id;
+    private String id;
 
+    public PollId() {}
     public PollId(String id) {
         this.id = id;
     }

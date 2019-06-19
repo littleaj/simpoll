@@ -7,6 +7,7 @@ import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
+import littleaj.simpoll.model.Result;
 import littleaj.simpoll.model.Status;
 
 import java.util.ArrayList;
@@ -19,24 +20,20 @@ import java.util.stream.Collectors;
 public class InMemoryPollRepository implements PollRepository, PollResultsRepository, PollStatusRepository {
     private Map<PollId, Poll> pollsStore;
     private Map<PollId, PollResults> resultsStore;
-    private Map<PollId, Status> statusStore;
 
     public InMemoryPollRepository() {
-        this(new HashMap<>(), new HashMap<>(), new HashMap<>());
+        this(new HashMap<>(), new HashMap<>());
     }
 
-    public InMemoryPollRepository(Map<PollId, Poll> pollsStore, Map<PollId, PollResults> resultsStore, Map<PollId, Status> statusStore) {
+    public InMemoryPollRepository(Map<PollId, Poll> pollsStore, Map<PollId, PollResults> resultsStore) {
         this.pollsStore = pollsStore;
         this.resultsStore = resultsStore;
-        this.statusStore = statusStore;
     }
 
     InMemoryPollRepository(Collection<Poll> polls, Collection<PollResults> results, Collection<Status> statuses) {
         this(
                 polls.stream().collect(Collectors.toMap(Poll::getId, Function.identity())),
-                results.stream().collect(Collectors.toMap(PollResults::getPollId, Function.identity())),
-                null);
-//        statuses.stream().collect(Collectors.toMap())
+                results.stream().collect(Collectors.toMap(PollResults::getPollId, Function.identity())));
     }
 
     @Override
@@ -59,20 +56,17 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
         return pollsStore.get(id);
     }
 
-    @Override
-    public Status getStatus(PollId id) {
-        return statusStore.get(id);
-    }
-
     /**
      * @throws PollNotFoundException
      */
     @Override
     public void updateStatus(PollId id, Status status) {
-        if (!pollsStore.containsKey(id)) {
+        Poll poll = pollsStore.get(id);
+        if (poll == null) {
             throw new PollNotFoundException();
         }
-        statusStore.put(id, status);
+        poll.setStatus(status);
+        pollsStore.put(poll.getId(), poll);
     }
 
     /**
@@ -87,16 +81,24 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
     }
 
     @Override
-    public void incrementResult(PollId pollId, int answerId) {
+    public void incrementResult(PollId pollId, String answer) {
         if (!pollsStore.containsKey(pollId)) {
             throw new PollNotFoundException();
         }
         PollResults results = resultsStore.get(pollId);
         if (results == null) {
+            final Poll poll = pollsStore.get(pollId);
             results = new PollResults(pollId);
-            resultsStore.put(pollId, results);
+            for (String a : poll.getAnswers()) {
+                Result r = new Result();
+                r.setAnswer(a);
+                results.putResult(r);
+            }
         }
-
+        final Result result = results.getResult(answer);
+        result.setVoteCount(result.getVoteCount() + 1);
+        results.putResult(result);
+        resultsStore.put(pollId, results);
     }
 
     /**
@@ -108,7 +110,6 @@ public class InMemoryPollRepository implements PollRepository, PollResultsReposi
             throw new PollNotFoundException();
         }
         resultsStore.remove(id);
-        statusStore.remove(id);
         pollsStore.remove(id);
     }
 

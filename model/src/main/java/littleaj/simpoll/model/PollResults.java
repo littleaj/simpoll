@@ -6,7 +6,7 @@ import java.util.Map;
 public class PollResults {
     private PollId pollId;
     private int resultsId;
-    private Map<Integer, Result> results;
+    private Map<String, Result> results;
     
     public PollResults(PollId pollId) {
         this.pollId = pollId;
@@ -30,17 +30,20 @@ public class PollResults {
         this.pollId = pollId;
     }
 
-    public Map<Integer, Result> getResults() {
+    public Map<String, Result> getResults() {
         return new HashMap<>(results);
     }
 
-    public void setResults(Map<Integer, Result> results) {
+    public void setResults(Map<String, Result> results) {
         this.results.clear();
         this.results.putAll(results);
     }
 
     public void putResult(Result result) {
-        this.results.put(result.getAnswerId(), result);
+        this.results.put(result.getAnswer(), result);
     }
 
+    public Result getResult(String answer) {
+        return this.results.get(answer);
+    }
 }

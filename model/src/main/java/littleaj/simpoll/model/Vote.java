@@ -4,18 +4,18 @@ import java.util.Objects;
 
 public class Vote {
     private PollId pollId;
-    private int answerId;
+    private String answer;
 
     public PollId getPollId() {
         return pollId;
     }
 
-    public int getAnswerId() {
-        return answerId;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setAnswerId(int answerId) {
-        this.answerId = answerId;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public void setPollId(PollId pollId) {
@@ -30,12 +30,12 @@ public class Vote {
             return false;
         }
         Vote vote = (Vote) o;
-        return Objects.equals(pollId, vote.pollId) && Objects.equals(answerId, vote.answerId);
+        return Objects.equals(pollId, vote.pollId) && Objects.equals(answer, vote.answer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pollId, answerId);
+        return Objects.hash(pollId, answer);
     }
 
 }

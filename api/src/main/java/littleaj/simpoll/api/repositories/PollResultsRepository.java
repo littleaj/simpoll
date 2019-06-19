@@ -6,5 +6,5 @@ import littleaj.simpoll.model.PollResults;
 public interface PollResultsRepository {
     PollResults getPollResults(PollId id);
     
-    void incrementResult(PollId pollId, int answerId);
+    void incrementResult(PollId pollId, String answer);
 }

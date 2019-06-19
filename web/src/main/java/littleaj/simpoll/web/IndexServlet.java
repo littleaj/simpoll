@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.stream.Collectors;
 
-@WebServlet(name="index", urlPatterns = {"/", "/index"})
+@WebServlet(name="list polls", urlPatterns = {"/", "/list"})
 public class IndexServlet extends HttpServlet {
     private static final long serialVersionUID = 6076404907866357513L;
 
@@ -84,6 +84,6 @@ public class IndexServlet extends HttpServlet {
         }
 
         req.setAttribute("pollsByStatus", polls.getPolls().stream().collect(Collectors.groupingBy(Poll::getStatus)));
-        req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        req.getRequestDispatcher("/list.jsp").forward(req, resp);
     }
 }

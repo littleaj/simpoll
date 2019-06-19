@@ -51,20 +51,16 @@ public class Poll {
         this.answers.addAll(answers);
     }
 
-    public String removeAnswer(int index) {
-        return this.answers.remove(index);
+    public boolean removeAnswer(String answer) {
+        return this.answers.remove(answer);
     }
 
     public void addAnswer(String answer) {
         this.answers.add(answer);
     }
 
-    public String getAnswer(int index) {
-        return this.answers.get(index);
-    }
-
-    public boolean hasAnswerId(int index) {
-        return index >= 0 && index < this.answers.size();
+    public boolean hasAnswer(String answer) {
+        return this.answers.contains(answer);
     }
 
     @Override
