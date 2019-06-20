@@ -1,9 +1,11 @@
 package littleaj.simpoll.api.repositories;
 
-import java.util.Collection;
-
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
+import littleaj.simpoll.model.PollResults;
+import littleaj.simpoll.model.Status;
+
+import java.util.Collection;
 
 public interface PollRepository {
     /**
@@ -38,4 +40,10 @@ public interface PollRepository {
      * @param id poll id
      */
     void deletePoll(PollId id);
+
+    PollResults getPollResults(PollId id);
+
+    void incrementResult(PollId pollId, String answer);
+
+    void updateStatus(PollId id, Status status);
 }

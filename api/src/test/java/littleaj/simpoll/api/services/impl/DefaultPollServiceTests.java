@@ -2,30 +2,23 @@ package littleaj.simpoll.api.services.impl;
 
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
 import littleaj.simpoll.api.repositories.PollRepository;
-import littleaj.simpoll.api.repositories.PollResultsRepository;
-import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.api.services.PollIdService;
 import littleaj.simpoll.model.Poll;
 import littleaj.simpoll.model.PollId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultPollServiceTests {
     @Mock
     private PollRepository pollRepo;
-
-    @Mock
-    private PollStatusRepository pollStatusRepo;
-
-    @Mock
-    private PollResultsRepository resutlsRepo;
 
     @Mock
     private PollIdService pollIdService;

@@ -7,12 +7,13 @@ import littleaj.simpoll.model.PollId;
 import littleaj.simpoll.model.PollResults;
 import littleaj.simpoll.model.Vote;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,7 +35,7 @@ import java.util.Map.Entry;
 @WebServlet(name="poll servlet", urlPatterns = "/poll/*")
 public class PollsServlet extends HttpServlet {
 
-    private HttpClient apiClient;
+    private CloseableHttpClient apiClient;
 
     private URI apiUrl;
 
@@ -44,7 +45,11 @@ public class PollsServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        apiClient = HttpClientBuilder.create().build();
+        PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+        apiClient = HttpClientBuilder.create()
+                .setConnectionManager(cm)
+                .useSystemProperties()
+                .build();
         final String apiEndpoint = System.getenv("SIMPOLL_API_HOSTNAME_PORT");
         final String[] split = apiEndpoint.split(":");
         final URIBuilder uriBuilder = new URIBuilder().setHost(split[0]).setScheme("http");
@@ -58,6 +63,15 @@ public class PollsServlet extends HttpServlet {
             initErrorMessage = "Error parsing api endpoint";
             initException = e;
             log(initErrorMessage, e);
+        }
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            apiClient.close();
+        } catch (IOException e) {
+            log("Error closing api http client", e);
         }
     }
 
@@ -139,7 +153,8 @@ public class PollsServlet extends HttpServlet {
         String name = req.getParameter("poll_name");
         String question = req.getParameter("poll_question");
         String answersRaw = req.getParameter("poll_answers");
-        List<String> answers = Arrays.asList(answersRaw.split("\\s+"));
+        List<String> answers = Arrays.asList(answersRaw.trim().split("\n"));
+        log("Answers = "+Arrays.toString(answers.toArray()));
         boolean activate = req.getParameter("poll_activate") != null;
         boolean save = req.getParameter("poll_save") != null || activate;
         boolean close = req.getParameter("poll_close") != null;

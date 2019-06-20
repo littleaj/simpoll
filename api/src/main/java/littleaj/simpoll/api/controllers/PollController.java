@@ -9,6 +9,7 @@ import littleaj.simpoll.model.PollsList;
 import littleaj.simpoll.model.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +69,16 @@ public class PollController {
         try {
             Poll poll = polls.read(id);
             return ResponseEntity.ok(poll);
+        } catch (PollNotFoundException pnfe) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity deletePoll(@PathVariable PollId id) {
+        try {
+            polls.delete(id);
+            return ResponseEntity.ok().build();
         } catch (PollNotFoundException pnfe) {
             return ResponseEntity.notFound().build();
         }

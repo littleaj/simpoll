@@ -1,15 +1,15 @@
 package littleaj.simpoll.api.config;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
 @Component
-@ConfigurationProperties("simpoll")
+@ConfigurationProperties(prefix = "simpoll")
 @Validated
 public class SimpollConfigurationProperties {
 

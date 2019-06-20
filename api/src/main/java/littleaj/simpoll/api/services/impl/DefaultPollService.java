@@ -3,8 +3,6 @@ package littleaj.simpoll.api.services.impl;
 import littleaj.simpoll.api.exceptions.AnswerNotFoundException;
 import littleaj.simpoll.api.exceptions.PollNotFoundException;
 import littleaj.simpoll.api.repositories.PollRepository;
-import littleaj.simpoll.api.repositories.PollResultsRepository;
-import littleaj.simpoll.api.repositories.PollStatusRepository;
 import littleaj.simpoll.api.services.PollIdService;
 import littleaj.simpoll.api.services.PollService;
 import littleaj.simpoll.model.Poll;
@@ -23,18 +21,11 @@ public class DefaultPollService implements PollService {
 
     private final PollRepository pollRepository;
 
-    private final PollStatusRepository pollStatusRepository;
-
-    private final PollResultsRepository resultsRepository;
-
     private final PollIdService pollIds;
 
     @Autowired
-    public DefaultPollService(PollRepository pollRepository, PollStatusRepository pollStatusRepository,
-                              PollResultsRepository resultsRepository, PollIdService pollIds) {
+    public DefaultPollService(PollRepository pollRepository, PollIdService pollIds) {
         this.pollRepository = pollRepository;
-        this.pollStatusRepository = pollStatusRepository;
-        this.resultsRepository = resultsRepository;
         this.pollIds = pollIds;
     }
 
@@ -75,7 +66,7 @@ public class DefaultPollService implements PollService {
         if (!pollRepository.hasPollId(id)) {
             throw new PollNotFoundException();
         }
-        pollStatusRepository.updateStatus(id, Status.OPEN);
+        pollRepository.updateStatus(id, Status.OPEN);
     }
 
     @Override
@@ -83,7 +74,7 @@ public class DefaultPollService implements PollService {
         if (!pollRepository.hasPollId(id)) {
             throw new PollNotFoundException();
         }
-        pollStatusRepository.updateStatus(id, Status.CLOSED);
+        pollRepository.updateStatus(id, Status.CLOSED);
     }
 
     @Override
@@ -99,7 +90,7 @@ public class DefaultPollService implements PollService {
         if (!hasAnswer(vote.getPollId(), vote.getAnswer())) {
             throw new AnswerNotFoundException();
         }
-        resultsRepository.incrementResult(vote.getPollId(), vote.getAnswer());
+        pollRepository.incrementResult(vote.getPollId(), vote.getAnswer());
     }
 
     private boolean hasAnswer(PollId pollId, String answer) {
@@ -115,6 +106,6 @@ public class DefaultPollService implements PollService {
         if (!pollRepository.hasPollId(id)) {
             throw new PollNotFoundException();
         }
-        return resultsRepository.getPollResults(id);
+        return pollRepository.getPollResults(id);
     }
 }
