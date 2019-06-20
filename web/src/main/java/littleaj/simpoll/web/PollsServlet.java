@@ -260,6 +260,8 @@ public class PollsServlet extends HttpServlet {
                                 req.getRequestDispatcher("/vote.jsp").forward(req, resp);
                                 return;
                             case CLOSED:
+                                PollResults results = retrieveResults(poll.getId().toString());
+                                req.setAttribute("results", results);
                                 req.getRequestDispatcher("/results.jsp").forward(req, resp);
                                 return;
                         }
@@ -273,6 +275,7 @@ public class PollsServlet extends HttpServlet {
                     Poll poll = retrievePoll(parts[0]);
                     PollResults results = retrieveResults(parts[0]);
                     req.setAttribute("poll", poll);
+                    req.setAttribute("results", results);
                     req.getRequestDispatcher("/results.jsp").forward(req, resp);
                     break;
                 default:
